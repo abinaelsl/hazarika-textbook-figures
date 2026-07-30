@@ -1,5 +1,7 @@
 # Hazarika Textbook Figures
 
+panik
+
 Figures and diagrams from Hazarika's textbook — open for contributions.
 
 ## Contributing
