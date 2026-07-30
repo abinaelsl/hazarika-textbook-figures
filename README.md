@@ -4,7 +4,7 @@ Figures and diagrams from Hazarika's textbook — open for contributions.
 
 ## Contributing
 
-Anyone can submit PRs! Fork, add/edit figures, and open a pull request.
+Plz dont let anyone do this
 
 ## Structure
 
@@ -13,6 +13,12 @@ Anyone can submit PRs! Fork, add/edit figures, and open a pull request.
 /source     — Editable source files (.svg, .drawio, etc.)
 /export     — High-res exports (.png, .pdf)
 ```
+## Formatting
+
+- Helvetica Font
+- Clear Labeling
+- First Letter Capitalization for In-Figure Labels
+- Title Case for Figure Labels (Captions)
 
 ## License
 
