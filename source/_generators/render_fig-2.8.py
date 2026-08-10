@@ -78,8 +78,11 @@ def cur(d1, stroke, col, dash=None):
     else:
         D.line([(x * rx, y * ry) for x, y in d1], fill=col, width=int(stroke * rx))
 
+def esc(s):
+    return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+
 def text(cx, cy, s, bold=True, size_px=22, fill="#111"):
-    SVG.append(f'<text x="{cx}" y="{cy}" font-family="Arial" font-size="{size_px/2}" font-weight="{"bold" if bold else "normal"}" fill="{fill}" text-anchor="middle" dominant-baseline="middle">{s}</text>')
+    SVG.append(f'<text x="{cx}" y="{cy}" font-family="Arial" font-size="{size_px/2}" font-weight="{"bold" if bold else "normal"}" fill="{fill}" text-anchor="middle" dominant-baseline="middle">{esc(s)}</text>')
     fnt = F if bold else FN
     D.text((cx*rx, cy*ry), s, fill=fill, font=fnt, anchor="mm")
 

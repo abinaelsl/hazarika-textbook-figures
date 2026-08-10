@@ -24,14 +24,20 @@ hazarika-textbook-figures/
 ├── README.md                          ← informal placeholder (written by repo owner, keep)
 ├── HANDOFF.md                         ← YOU ARE HERE
 ├── source/
-│   ├── fig-<n>-<slug>.svg             ← editable vector per figure (generated)
+│   ├── fig-<n>-<slug>.svg              ← editable vector per figure (generated)
 │   └── _generators/
 │       ├── render_fig-<n>.py          ← ONE generator script per figure
-│       └── figkit.py                  ← (proposed, see §7) shared drawing library
+│       └── figkit.py                  ← shared drawing library (IMPLEMENTED)
+├── scripts/
+│   ├── render_figure.py               ← render + QA one-shot (IMPLEMENTED)
+│   └── qa_figure.py                   ← QA gate (IMPLEMENTED)
+├── .qa/                               ← per-figure QA reports (gitignored)
 ├── export/
 │   └── fig-<n>-<slug>.png             ← high-res raster (2× scale, generated)
-├── FIG_SPECS/                         ← (proposed, see §7) per-figure specs
-│   └── INDEX.md                       ← (proposed) the live "what's left" tracker
+├── FIG_SPECS/                         ← per-figure specs (IMPLEMENTED)
+│   ├── INDEX.md                       ← the live "what's left" tracker
+│   ├── _TEMPLATE.md                   ← spec template
+│   └── fig-<n>-<slug>.md              ← one spec per figure
 ├── Fig_Workspace/
 │   ├── CH1/ CH2/ CH3/                 ← ORIGINAL manuscript docx + legacy SVGs + per-chapter README to-do lists
 │   └── ...
@@ -62,6 +68,8 @@ hazarika-textbook-figures/
 | Ch3 Fig 3.14 | Procedures of Sand Drain Method with Casing Pipe | 若干修正 (minor corrections) | `bd7b9e9` |
 
 Git history: `b8a6520` (original scans) → … → `0d9582c` → `912f378` → `3a730e2` → `124cc30` → `bd7b9e9` (head). **Local == remote == `bd7b9e9`.**
+
+**2026-08-10 scaffold commit** (after `bd7b9e9`, see git log): added `figkit.py`, `scripts/qa_figure.py`, `scripts/render_figure.py`, `FIG_SPECS/` (INDEX + template + example), `.gitignore` `.qa/`, and marked §7 components IMPLEMENTED in this file.
 
 ### ⛔ Blocked (needs the professor)
 | Fig | Annotation (exact) | What's needed |
@@ -199,6 +207,10 @@ Useful in-source labels (Ch3 docx, for future figures): Fig 3.10 sand-drain cros
 This is the plan for the next generation of figure work. It directly addresses the owner's complaint (soil particles look low-effort) and the pain points found in the first 5 figures.
 
 ### 7.1 Shared drawing library: `source/_generators/figkit.py`
+**IMPLEMENTED 2026-08-10** (scaffold commit, see §3) — this section documents the design;
+all components below exist in the repo and are wired. `figkit.py` ships with a self-test
+swatch (`python source/_generators/figkit.py`) covering every soil preset.
+
 Today every generator re-implements line/arrow/hatch/dots/text. Extract them once:
 
 ```python
@@ -224,6 +236,9 @@ Palette (consistent across figures): ink `#111`, secondary `#444`, soft `#888`, 
 - **Particles in motion** (vibration/liquefaction): show displacement vectors, not just colored dots.
 
 ### 7.3 Spec-first workflow: `FIG_SPECS/<fig>.md`
+**IMPLEMENTED 2026-08-10** — registry at `FIG_SPECS/INDEX.md` (seeded with all of
+§3/§4), template at `FIG_SPECS/_TEMPLATE.md`, filled example `fig-2.8-loose-sand-vibration.md`.
+
 Before drawing, write a short spec (this is what makes a new model fast and keeps the professor's intent):
 
 ```markdown
@@ -239,6 +254,7 @@ Before drawing, write a short spec (this is what makes a new model fast and keep
 Keep a registry `FIG_SPECS/INDEX.md` — the live "what's left" tracker (supersedes the scattered `Fig_Workspace/*/README.md` to-do lists). A figure is "spec'd" before any SVG is touched.
 
 ### 7.4 Automated QA gate: `scripts/qa_figure.py <fig>`
+**IMPLEMENTED 2026-08-10.** Usage: `python scripts/qa_figure.py fig-3.15` (number-only OK).
 Run before every commit. Checks:
 1. SVG well-formed XML, `viewBox` = expected canvas, parses.
 2. PNG exists, non-blank (>0.5% non-white pixels in a probe region), same dimensions as expected (2×).
@@ -248,6 +264,8 @@ Run before every commit. Checks:
 Failures are advisory warnings, not blockers (drafts ship early), but the report tells you exactly what to look at.
 
 ### 7.5 Command wrappers
+**IMPLEMENTED 2026-08-10.**
+
 ```bash
 python scripts/render_figure.py fig-3.10        # render + QA + report, one shot
 python scripts/qa_figure.py fig-3.10
