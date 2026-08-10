@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="1672" viewBox="0 0 500 760">
+  <!-- Fig 3.16 — Mandrel-type machine for wick driving (clean redraw, draft 1)
+       Original: hand sketch in Ch3 fig doc. Redrawn for Hazarika's GI book. -->
+  <defs>
+    <pattern id="soil" width="12" height="12" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <line x1="0" y1="0" x2="0" y2="12" stroke="#c9c9c9" stroke-width="1"/>
+    </pattern>
+    <pattern id="soilDense" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <line x1="0" y1="0" x2="0" y2="8" stroke="#b5b5b5" stroke-width="1.2"/>
+    </pattern>
+  </defs>
+
+  <g stroke="#111111" fill="none" stroke-linecap="round" stroke-linejoin="round">
+
+    <!-- ── Soil (soft ground) below surface ── -->
+    <rect x="25" y="520" width="450" height="240" fill="url(#soil)"/>
+    <rect x="120" y="520" width="110" height="240" fill="url(#soilDense)"/>
+    <rect x="270" y="520" width="110" height="240" fill="url(#soilDense)"/>
+
+    <!-- ── Ground surface ── -->
+    <line x1="25" y1="520" x2="475" y2="520" stroke-width="3"/>
+
+    <!-- ── Hollow mandrel pipe ── -->
+    <line x1="238" y1="200" x2="238" y2="690" stroke-width="3"/>
+    <line x1="262" y1="200" x2="262" y2="690" stroke-width="3"/>
+    <line x1="238" y1="690" x2="262" y2="690" stroke-width="3"/>
+
+    <!-- ── Wick drain strip inside mandrel ── -->
+    <line x1="250" y1="205" x2="250" y2="688" stroke="#444" stroke-width="1.4" stroke-dasharray="8,5"/>
+
+    <!-- ── Driving head (vibrator/hammer) atop the mandrel ── -->
+    <rect x="231" y="185" width="38" height="22" fill="#e8e8e8"/>
+
+    <!-- ── Crawler tracks ── -->
+    <rect x="140" y="448" width="72" height="72" rx="30" fill="#2e2e2e"/>
+    <rect x="288" y="448" width="72" height="72" rx="30" fill="#2e2e2e"/>
+    <circle cx="160" cy="484" r="16" fill="#111"/>
+    <circle cx="192" cy="484" r="16" fill="#111"/>
+    <circle cx="308" cy="484" r="16" fill="#111"/>
+    <circle cx="340" cy="484" r="16" fill="#111"/>
+
+    <!-- ── Base frame ── -->
+    <line x1="150" y1="452" x2="350" y2="452" stroke-width="5"/>
+
+    <!-- ── Hull / cab ── -->
+    <path d="M176 300 L324 300 L334 330 L334 438 L166 438 L166 330 Z" fill="#f4f4f4" stroke-width="2"/>
+    <path d="M192 312 L250 312 L258 336 L250 384 L192 384 L184 336 Z" fill="#dfebf5" stroke-width="1.2"/>
+    <line x1="250" y1="336" x2="250" y2="438" stroke-width="1.2" stroke-dasharray="3,4" opacity="0.6"/>
+
+    <!-- ── Mast (tower) right of centre ── -->
+    <line x1="262" y1="40" x2="262" y2="300" stroke-width="3"/>
+    <line x1="280" y1="40" x2="280" y2="300" stroke-width="3"/>
+    <line x1="258" y1="70" x2="284" y2="70" stroke-width="1.2"/>
+    <line x1="258" y1="140" x2="284" y2="140" stroke-width="1.2"/>
+    <line x1="258" y1="210" x2="284" y2="210" stroke-width="1.2"/>
+
+    <!-- ── Diagonal support boom ── -->
+    <line x1="271" y1="48" x2="100" y2="206" stroke-width="6"/>
+
+    <!-- ── Pulleys ── -->
+    <circle cx="271" cy="30" r="9" stroke-width="2.5"/>
+    <circle cx="100" cy="206" r="11" stroke-width="2.5"/>
+
+    <!-- ── Rigging ── -->
+    <line x1="271" y1="30" x2="100" y2="206" stroke="#444" stroke-width="1.4"/>
+    <line x1="262" y1="33" x2="250" y2="185" stroke="#444" stroke-width="1.4"/>
+
+    <!-- ── Surface marks near tracks ── -->
+    <path d="M148 520 L156 506 M156 520 L164 506 M164 520 L172 506 M296 520 L304 506 M304 520 L312 506 M312 520 L320 506" stroke-width="1.2"/>
+
+    <!-- ── Labels (small tags, English) ── -->
+    <g font-family="Arial, Helvetica, sans-serif" font-size="11.5" fill="#111">
+      <!-- Pulley -->
+      <rect x="284" y="14" width="46" height="17" fill="#fff" stroke="#999" stroke-width="0.6"/>
+      <text x="307" y="26.5" text-anchor="middle">Pulley</text>
+      <!-- Mast -->
+      <rect x="290" y="54" width="34" height="17" fill="#fff" stroke="#999" stroke-width="0.6"/>
+      <text x="307" y="66.5" text-anchor="middle">Mast</text>
+      <!-- Boom -->
+      <rect x="92" y="96" width="40" height="17" fill="#fff" stroke="#999" stroke-width="0.6"/>
+      <text x="112" y="108.5" text-anchor="middle">Boom</text>
+      <!-- Driving head -->
+      <rect x="272" y="176" width="86" height="17" fill="#fff" stroke="#999" stroke-width="0.6"/>
+      <text x="315" y="188.5" text-anchor="middle">Driving head</text>
+      <!-- Mandrel -->
+      <rect x="270" y="316" width="54" height="17" fill="#fff" stroke="#999" stroke-width="0.6"/>
+      <text x="297" y="328.5" text-anchor="middle">Mandrel</text>
+      <!-- Wick drain -->
+      <rect x="270" y="624" width="66" height="17" fill="#fff" stroke="#999" stroke-width="0.6"/>
+      <text x="303" y="636.5" text-anchor="middle">Wick drain</text>
+      <!-- Crawler -->
+      <rect x="96" y="444" width="52" height="17" fill="#fff" stroke="#999" stroke-width="0.6"/>
+      <text x="122" y="456.5" text-anchor="middle">Crawler</text>
+      <!-- Ground line -->
+      <rect x="360" y="498" width="80" height="17" fill="#fff" stroke="#999" stroke-width="0.6"/>
+      <text x="400" y="510.5" text-anchor="middle">Ground line</text>
+      <!-- Soft ground -->
+      <rect x="360" y="628" width="72" height="17" fill="#fff" stroke="#999" stroke-width="0.6"/>
+      <text x="396" y="640.5" text-anchor="middle">Soft ground</text>
+    </g>
+  </g>
+</svg>
