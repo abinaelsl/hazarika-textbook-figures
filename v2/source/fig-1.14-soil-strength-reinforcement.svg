@@ -1,0 +1,137 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1840" viewBox="0 0 900 920">
+<text x="160" y="26" font-family="Arial" font-size="12.0" font-weight="bold" fill="#111" text-anchor="middle" dominant-baseline="middle">(a) Uniaxial compression</text>
+<text x="440" y="26" font-family="Arial" font-size="12.0" font-weight="bold" fill="#111" text-anchor="middle" dominant-baseline="middle">(b) Triaxial compression</text>
+<text x="700" y="26" font-family="Arial" font-size="12.0" font-weight="bold" fill="#111" text-anchor="middle" dominant-baseline="middle">(c) Triaxial + reinforcement</text>
+<rect x="114.0" y="94.0" width="92.0" height="92.0" stroke="#111" stroke-width="2" fill="#f5f2ec"/>
+<ellipse cx="127.53818313306638" cy="126.51367190744621" rx="1.997037621645511" ry="2.062923751296418" fill="#a09a8e"/>
+<ellipse cx="162.00750765484855" cy="143.34801700742807" rx="2.582893570744921" ry="2.402221233425032" fill="#a09a8e"/>
+<ellipse cx="141.13074225696104" cy="107.10984553720532" rx="1.411462366746636" ry="1.5753653751201127" fill="#a09a8e"/>
+<ellipse cx="160.672456396639" cy="136.07276888834872" rx="2.5320240252572743" ry="2.6263011954290043" fill="#a09a8e"/>
+<ellipse cx="197.7640995999078" cy="155.48892510899657" rx="2.329565804878679" ry="2.520057775168872" fill="#a09a8e"/>
+<ellipse cx="132.58576757623175" cy="160.54247530594958" rx="2.2750876323710756" ry="2.326015089914687" fill="#a09a8e"/>
+<ellipse cx="152.37313848317433" cy="123.73412581431072" rx="1.8266294641671739" ry="2.1638055631173008" fill="#a09a8e"/>
+<line x1="160.0" y1="70.0" x2="160.0" y2="92.0" stroke="#222" stroke-width="2.4"/>
+<line x1="160.0" y1="92.0" x2="154.4" y2="83.7" stroke="#222" stroke-width="2.4"/>
+<line x1="160.0" y1="92.0" x2="165.6" y2="83.7" stroke="#222" stroke-width="2.4"/>
+<line x1="160.0" y1="210.0" x2="160.0" y2="188.0" stroke="#222" stroke-width="2.4"/>
+<line x1="160.0" y1="188.0" x2="165.6" y2="196.3" stroke="#222" stroke-width="2.4"/>
+<line x1="160.0" y1="188.0" x2="154.4" y2="196.3" stroke="#222" stroke-width="2.4"/>
+<text x="160" y="58" font-family="Arial" font-size="11.0" font-weight="bold" fill="#111" text-anchor="middle" dominant-baseline="middle">σ₁</text>
+<text x="160" y="224" font-family="Arial" font-size="11.0" font-weight="bold" fill="#111" text-anchor="middle" dominant-baseline="middle">σ₁</text>
+<rect x="394.0" y="104.0" width="92.0" height="92.0" stroke="#111" stroke-width="2" fill="#f5f2ec"/>
+<ellipse cx="407.68619204023844" cy="114.11719765111798" rx="1.5656898214622075" ry="1.525529913413686" fill="#a09a8e"/>
+<ellipse cx="402.18884120871826" cy="154.43318066249287" rx="2.4046531930799215" ry="2.4273387220086433" fill="#a09a8e"/>
+<ellipse cx="417.03452903375415" cy="141.00627763589966" rx="1.8357181163671525" ry="1.7580733458199873" fill="#a09a8e"/>
+<ellipse cx="422.1719764719339" cy="141.11772585882122" rx="2.4251279603691573" ry="2.4558132087038476" fill="#a09a8e"/>
+<ellipse cx="431.54292090585716" cy="144.9308694674197" rx="2.3918347101987028" ry="2.3994315256330085" fill="#a09a8e"/>
+<ellipse cx="442.88014333583965" cy="167.41601722724127" rx="2.3711914960890423" ry="2.173975703402883" fill="#a09a8e"/>
+<ellipse cx="408.53448457617264" cy="184.61807056839007" rx="2.9138800620147496" ry="2.3801751272149443" fill="#a09a8e"/>
+<line x1="440.0" y1="82.0" x2="440.0" y2="102.0" stroke="#222" stroke-width="2.4"/>
+<line x1="440.0" y1="102.0" x2="434.4" y2="93.7" stroke="#222" stroke-width="2.4"/>
+<line x1="440.0" y1="102.0" x2="445.6" y2="93.7" stroke="#222" stroke-width="2.4"/>
+<line x1="440.0" y1="218.0" x2="440.0" y2="198.0" stroke="#222" stroke-width="2.4"/>
+<line x1="440.0" y1="198.0" x2="445.6" y2="206.3" stroke="#222" stroke-width="2.4"/>
+<line x1="440.0" y1="198.0" x2="434.4" y2="206.3" stroke="#222" stroke-width="2.4"/>
+<line x1="382.0" y1="150.0" x2="402.0" y2="150.0" stroke="#222" stroke-width="2.4"/>
+<line x1="402.0" y1="150.0" x2="393.7" y2="155.6" stroke="#222" stroke-width="2.4"/>
+<line x1="402.0" y1="150.0" x2="393.7" y2="144.4" stroke="#222" stroke-width="2.4"/>
+<line x1="498.0" y1="150.0" x2="478.0" y2="150.0" stroke="#222" stroke-width="2.4"/>
+<line x1="478.0" y1="150.0" x2="486.3" y2="144.4" stroke="#222" stroke-width="2.4"/>
+<line x1="478.0" y1="150.0" x2="486.3" y2="155.6" stroke="#222" stroke-width="2.4"/>
+<rect x="394" y="130" width="92" height="66" stroke="#8a8a8a" stroke-width="1.6" fill="none"/>
+<line x1="394.0" y1="130.0" x2="486.0" y2="130.0" stroke="#8a8a8a" stroke-width="1.6" stroke-dasharray="6,4"/>
+<line x1="394.0" y1="196.0" x2="486.0" y2="196.0" stroke="#8a8a8a" stroke-width="1.6" stroke-dasharray="6,4"/>
+<line x1="394.0" y1="130.0" x2="394.0" y2="196.0" stroke="#8a8a8a" stroke-width="1.6" stroke-dasharray="6,4"/>
+<line x1="486.0" y1="130.0" x2="486.0" y2="196.0" stroke="#8a8a8a" stroke-width="1.6" stroke-dasharray="6,4"/>
+<text x="440" y="58" font-family="Arial" font-size="11.0" font-weight="bold" fill="#111" text-anchor="middle" dominant-baseline="middle">σ₁</text>
+<text x="440" y="232" font-family="Arial" font-size="11.0" font-weight="bold" fill="#111" text-anchor="middle" dominant-baseline="middle">σ₁</text>
+<text x="368" y="150" font-family="Arial" font-size="11.0" font-weight="bold" fill="#111" text-anchor="middle" dominant-baseline="middle">σ₃</text>
+<text x="512" y="150" font-family="Arial" font-size="11.0" font-weight="bold" fill="#111" text-anchor="middle" dominant-baseline="middle">σ₃</text>
+<text x="512" y="238" font-family="Arial" font-size="9.0" font-weight="normal" fill="#555" text-anchor="middle" dominant-baseline="middle">σ₁ > σ₃</text>
+<rect x="592.5" y="105.8" width="59.0" height="12.5" rx="2" fill="#ffffff" stroke="#999" stroke-width="1"/>
+<text x="622" y="112" font-family="Arial" font-size="7.0" font-weight="normal" fill="#111" text-anchor="middle" dominant-baseline="middle">Deformed shape</text>
+<line x1="610.0" y1="118.0" x2="496.0" y2="150.0" stroke="#888" stroke-width="1.0"/>
+<rect x="654.0" y="104.0" width="92.0" height="92.0" stroke="#111" stroke-width="2" fill="#f5f2ec"/>
+<ellipse cx="671.2944414587487" cy="123.49684861708317" rx="2.1508938282548113" ry="2.0321082832100146" fill="#a09a8e"/>
+<ellipse cx="684.8477037932203" cy="107.4618119313305" rx="1.5335522374167605" ry="1.5666549685935782" fill="#a09a8e"/>
+<ellipse cx="677.7407605663258" cy="135.77297218698226" rx="2.070473061345422" ry="2.2712777140995364" fill="#a09a8e"/>
+<ellipse cx="709.7376800125656" cy="134.9189640762751" rx="1.9339079646684452" ry="1.7661243640796904" fill="#a09a8e"/>
+<ellipse cx="702.2564976955078" cy="112.22047313536441" rx="1.881038847781636" ry="1.902396823045932" fill="#a09a8e"/>
+<ellipse cx="705.7266833103167" cy="144.10976468922502" rx="2.226742071247295" ry="2.3605660789696477" fill="#a09a8e"/>
+<ellipse cx="671.3224592891038" cy="182.04622257530508" rx="2.6919133400261286" ry="2.9203233983308157" fill="#a09a8e"/>
+<line x1="700.0" y1="82.0" x2="700.0" y2="102.0" stroke="#222" stroke-width="2.4"/>
+<line x1="700.0" y1="102.0" x2="694.4" y2="93.7" stroke="#222" stroke-width="2.4"/>
+<line x1="700.0" y1="102.0" x2="705.6" y2="93.7" stroke="#222" stroke-width="2.4"/>
+<line x1="700.0" y1="218.0" x2="700.0" y2="198.0" stroke="#222" stroke-width="2.4"/>
+<line x1="700.0" y1="198.0" x2="705.6" y2="206.3" stroke="#222" stroke-width="2.4"/>
+<line x1="700.0" y1="198.0" x2="694.4" y2="206.3" stroke="#222" stroke-width="2.4"/>
+<line x1="642.0" y1="150.0" x2="662.0" y2="150.0" stroke="#222" stroke-width="2.4"/>
+<line x1="662.0" y1="150.0" x2="653.7" y2="155.6" stroke="#222" stroke-width="2.4"/>
+<line x1="662.0" y1="150.0" x2="653.7" y2="144.4" stroke="#222" stroke-width="2.4"/>
+<line x1="758.0" y1="150.0" x2="738.0" y2="150.0" stroke="#222" stroke-width="2.4"/>
+<line x1="738.0" y1="150.0" x2="746.3" y2="144.4" stroke="#222" stroke-width="2.4"/>
+<line x1="738.0" y1="150.0" x2="746.3" y2="155.6" stroke="#222" stroke-width="2.4"/>
+<rect x="654" y="132" width="92" height="64" stroke="#8a8a8a" stroke-width="1.6" fill="none"/>
+<line x1="654.0" y1="132.0" x2="746.0" y2="132.0" stroke="#8a8a8a" stroke-width="1.6" stroke-dasharray="6,4"/>
+<line x1="654.0" y1="196.0" x2="746.0" y2="196.0" stroke="#8a8a8a" stroke-width="1.6" stroke-dasharray="6,4"/>
+<line x1="654.0" y1="132.0" x2="654.0" y2="196.0" stroke="#8a8a8a" stroke-width="1.6" stroke-dasharray="6,4"/>
+<line x1="746.0" y1="132.0" x2="746.0" y2="196.0" stroke="#8a8a8a" stroke-width="1.6" stroke-dasharray="6,4"/>
+<line x1="656.0" y1="143.0" x2="744.0" y2="143.0" stroke="#333" stroke-width="3.0"/>
+<line x1="656.0" y1="165.0" x2="744.0" y2="165.0" stroke="#333" stroke-width="3.0"/>
+<line x1="662.0" y1="143.0" x2="674.0" y2="143.0" stroke="#666" stroke-width="1.4"/>
+<line x1="674.0" y1="143.0" x2="669.0" y2="146.3" stroke="#666" stroke-width="1.4"/>
+<line x1="674.0" y1="143.0" x2="669.0" y2="139.7" stroke="#666" stroke-width="1.4"/>
+<line x1="738.0" y1="143.0" x2="726.0" y2="143.0" stroke="#666" stroke-width="1.4"/>
+<line x1="726.0" y1="143.0" x2="731.0" y2="139.7" stroke="#666" stroke-width="1.4"/>
+<line x1="726.0" y1="143.0" x2="731.0" y2="146.3" stroke="#666" stroke-width="1.4"/>
+<line x1="662.0" y1="165.0" x2="674.0" y2="165.0" stroke="#666" stroke-width="1.4"/>
+<line x1="674.0" y1="165.0" x2="669.0" y2="168.3" stroke="#666" stroke-width="1.4"/>
+<line x1="674.0" y1="165.0" x2="669.0" y2="161.7" stroke="#666" stroke-width="1.4"/>
+<line x1="738.0" y1="165.0" x2="726.0" y2="165.0" stroke="#666" stroke-width="1.4"/>
+<line x1="726.0" y1="165.0" x2="731.0" y2="161.7" stroke="#666" stroke-width="1.4"/>
+<line x1="726.0" y1="165.0" x2="731.0" y2="168.3" stroke="#666" stroke-width="1.4"/>
+<text x="700" y="58" font-family="Arial" font-size="11.0" font-weight="bold" fill="#111" text-anchor="middle" dominant-baseline="middle">σ₁</text>
+<text x="700" y="232" font-family="Arial" font-size="11.0" font-weight="bold" fill="#111" text-anchor="middle" dominant-baseline="middle">σ₁</text>
+<text x="628" y="150" font-family="Arial" font-size="11.0" font-weight="bold" fill="#111" text-anchor="middle" dominant-baseline="middle">σ₃</text>
+<text x="772" y="150" font-family="Arial" font-size="11.0" font-weight="bold" fill="#111" text-anchor="middle" dominant-baseline="middle">σ₃</text>
+<text x="700" y="238" font-family="Arial" font-size="9.0" font-weight="normal" fill="#555" text-anchor="middle" dominant-baseline="middle">σ₁ > σ₃</text>
+<rect x="672.0" y="106.5" width="56.0" height="11.0" rx="2" fill="#ffffff" stroke="#999" stroke-width="1"/>
+<text x="700" y="112" font-family="Arial" font-size="7.0" font-weight="bold" fill="#333" text-anchor="middle" dominant-baseline="middle">Reinforcement</text>
+<line x1="652.0" y1="288.0" x2="748.0" y2="288.0" stroke="#555" stroke-width="1.5" stroke-dasharray="5,4"/>
+<rect x="648" y="278" width="10" height="20" stroke="#333" stroke-width="2" fill="none"/>
+<rect x="742" y="278" width="10" height="20" stroke="#333" stroke-width="2" fill="none"/>
+<line x1="670.0" y1="288.0" x2="688.0" y2="288.0" stroke="#666" stroke-width="1.3"/>
+<line x1="688.0" y1="288.0" x2="683.8" y2="290.8" stroke="#666" stroke-width="1.3"/>
+<line x1="688.0" y1="288.0" x2="683.8" y2="285.2" stroke="#666" stroke-width="1.3"/>
+<line x1="730.0" y1="288.0" x2="712.0" y2="288.0" stroke="#666" stroke-width="1.3"/>
+<line x1="712.0" y1="288.0" x2="716.2" y2="285.2" stroke="#666" stroke-width="1.3"/>
+<line x1="712.0" y1="288.0" x2="716.2" y2="290.8" stroke="#666" stroke-width="1.3"/>
+<rect x="668.5" y="261.8" width="63.0" height="12.5" rx="2" fill="#ffffff" stroke="#999" stroke-width="1"/>
+<text x="700" y="268" font-family="Arial" font-size="6.5" font-weight="normal" fill="#555" text-anchor="middle" dominant-baseline="middle">Imaginary end plate</text>
+<text x="120" y="470" font-family="Arial" font-size="12.0" font-weight="bold" fill="#111" text-anchor="middle" dominant-baseline="middle">Failure envelopes</text>
+<line x1="170.0" y1="480.0" x2="170.0" y2="700.0" stroke="#222" stroke-width="1.8"/>
+<line x1="170.0" y1="700.0" x2="165.5" y2="693.4" stroke="#222" stroke-width="1.8"/>
+<line x1="170.0" y1="700.0" x2="174.5" y2="693.4" stroke="#222" stroke-width="1.8"/>
+<line x1="170.0" y1="700.0" x2="830.0" y2="700.0" stroke="#222" stroke-width="1.8"/>
+<line x1="830.0" y1="700.0" x2="823.4" y2="704.5" stroke="#222" stroke-width="1.8"/>
+<line x1="830.0" y1="700.0" x2="823.4" y2="695.5" stroke="#222" stroke-width="1.8"/>
+<line x1="170.0" y1="700.0" x2="660.0" y2="417.1" stroke="#c0392b" stroke-width="2.0"/>
+<text x="560" y="403.0983680970834" font-family="Arial" font-size="11.0" font-weight="bold" fill="#c0392b" text-anchor="middle" dominant-baseline="middle">φ</text>
+<line x1="170.0" y1="700.0" x2="660.0" y2="982.9" stroke="#c0392b" stroke-width="2.0"/>
+<path d="M 260.0,700.0 A 90.0,90.0 0 0 1 440.0,700.0" fill="none" stroke="#1a1a1a" stroke-width="2.2"/>
+<path d="M 440.0,700.0 A 90.0,90.0 0 0 1 260.0,700.0" fill="none" stroke="#1a1a1a" stroke-width="2.2"/>
+<path d="M 350.0,700.0 A 180.0,180.0 0 0 1 710.0,700.0" fill="none" stroke="#2c5f8a" stroke-width="2.2"/>
+<path d="M 710.0,700.0 A 180.0,180.0 0 0 1 350.0,700.0" fill="none" stroke="#2c5f8a" stroke-width="2.2"/>
+<text x="260.0" y="720.0" font-family="Arial" font-size="10.0" font-weight="normal" fill="#111" text-anchor="middle" dominant-baseline="middle">σ₃</text>
+<text x="440.0" y="720.0" font-family="Arial" font-size="10.0" font-weight="normal" fill="#111" text-anchor="middle" dominant-baseline="middle">σ₁</text>
+<text x="350.0" y="720.0" font-family="Arial" font-size="10.0" font-weight="normal" fill="#2c5f8a" text-anchor="middle" dominant-baseline="middle">σ₃ᵣ</text>
+<text x="710.0" y="720.0" font-family="Arial" font-size="10.0" font-weight="normal" fill="#2c5f8a" text-anchor="middle" dominant-baseline="middle">σ₁ᵣ</text>
+<text x="260.0" y="742.0" font-family="Arial" font-size="9.5" font-weight="bold" fill="#2c5f8a" text-anchor="middle" dominant-baseline="middle">Δσ₃</text>
+<line x1="260.0" y1="734.0" x2="350.0" y2="734.0" stroke="#2c5f8a" stroke-width="1.4"/>
+<line x1="260.0" y1="730.0" x2="260.0" y2="738.0" stroke="#2c5f8a" stroke-width="1.0"/>
+<line x1="350.0" y1="730.0" x2="350.0" y2="738.0" stroke="#2c5f8a" stroke-width="1.0"/>
+<text x="148" y="462" font-family="Arial" font-size="12.0" font-weight="bold" fill="#111" text-anchor="middle" dominant-baseline="middle">τ</text>
+<text x="830" y="696" font-family="Arial" font-size="12.0" font-weight="bold" fill="#111" text-anchor="middle" dominant-baseline="middle">σ</text>
+<text x="236" y="478" font-family="Arial" font-size="7.0" font-weight="normal" fill="#555" text-anchor="middle" dominant-baseline="middle">unreinforced</text>
+<text x="540" y="390" font-family="Arial" font-size="7.0" font-weight="normal" fill="#2c5f8a" text-anchor="middle" dominant-baseline="middle">reinforced</text>
+</svg>
