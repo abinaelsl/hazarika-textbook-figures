@@ -1,3 +1,5 @@
 ~$*
 *.tmp
 .qa/
+__pycache__/
+*.pyc
