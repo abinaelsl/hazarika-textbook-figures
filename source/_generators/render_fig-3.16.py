@@ -1,162 +1,127 @@
 #!/usr/bin/env python3
-"""Render Fig 3.16 (mandrel wick-driving machine) to a high-res PNG with PIL,
-mirroring source/fig-3.16-mandrel-machine.svg geometry (viewBox 500x760)."""
-from PIL import Image, ImageDraw
+"""Generate Fig 3.16 v2 'Mandrel-type Machine for Wick Driving' (SVG+PNG).
 
-S = 2.2
-W, H = int(500 * S), int(760 * S)
-img = Image.new("RGB", (W, H), "white")
-d = ImageDraw.Draw(img)
+v2 improvements over v1:
+- Uses figkit Canvas for consistent primitives + tag() labels
+- Proper soil rendering with soil("clay") preset
+- Better machine rendering: detailed crawler tracks, cab, mast
+- Sand drain shown with graded grains inside mandrel
+- All labels use tag() for readability over hatching
+- Consistent palette, better proportions
+"""
+import sys, os, math
+sys.path.insert(0, os.path.dirname(__file__))
+from figkit import Canvas
 
+c = Canvas(500, 760)
 
-def pt(x, y):
-    return (x * S, y * S)
+INK = "#1a1a1a"
+GREY = "#666"
+DARK = "#2e2e2e"
 
+# ---------- soil band (soft ground below surface) ----------
+c.soil(25, 520, 475, 760, "clay", seed=1)
+# ---------- ground surface ----------
+c.line(25, 520, 475, 520, w=3, color=INK)
 
-def line(x1, y1, x2, y2, width, fill="#111", dash=None):
-    if dash:
-        # manual dashed segment
-        sx, sy = pt(x1, y1)
-        ex, ey = pt(x2, y2)
-        dx, dy = ex - sx, ey - sy
-        length = (dx * dx + dy * dy) ** 0.5
-        if length == 0:
-            return
-        nx, ny = dx / length, dy / length
-        on, off = dash
-        pos = 0.0
-        while pos < length:
-            seg = min(on, length - pos)
-            d.line(
-                [(sx + nx * pos, sy + ny * pos), (sx + nx * (pos + seg), sy + ny * (pos + seg))],
-                fill=fill, width=int(width * S),
-            )
-            pos += seg + off
-    else:
-        d.line([pt(x1, y1), pt(x2, y2)], fill=fill, width=int(width * S))
+# ---------- hollow mandrel pipe (double-wall) ----------
+c.line(238, 200, 238, 690, w=3, color=INK)
+c.line(262, 200, 262, 690, w=3, color=INK)
+c.line(238, 690, 262, 690, w=3, color=INK)  # bottom cap
 
+# ---------- wick drain inside mandrel (dashed) ----------
+c.line(250, 205, 250, 688, w=1.4, color="#333", dash="8,5")
+# graded grains along the wick drain
+c.grains(244, 210, 256, 680, n=15, r_min=1.0, r_max=2.0,
+         color="#666", seed=16, grade=True)
 
-def rect(x, y, w, h, fill=None, outline="#111", r=None, width=2):
-    d.rounded_rectangle(
-        [pt(x, y), pt(x + w, y + h)],
-        radius=int((r or 0) * S),
-        fill=fill, outline=outline, width=int(width * S),
-    )
+# ---------- driving head atop mandrel ----------
+c.rect(231, 185, 269, 207, w=2, fill="#e8e8e8", color=INK)
+# detail lines on driving head
+c.line(235, 192, 265, 192, w=1.0, color=GREY)
+c.line(235, 200, 265, 200, w=1.0, color=GREY)
 
+# ---------- crawler tracks (continuous track shape) ----------
+# left track
+c.rect(140, 448, 212, 520, w=2, fill=DARK, color=INK)
+# track wheels
+for wx in (152, 170, 188, 200):
+    c.circle(wx, 484, 10, fill="#111", stroke=INK, sw=1.5)
+# track surface marks
+for sx in range(144, 210, 6):
+    c.line(sx, 520, sx + 3, 514, w=1.0, color="#444")
 
-def circle(cx, cy, rad, fill=None, outline="#111", width=2):
-    d.ellipse(
-        [pt(cx - rad, cy - rad), pt(cx + rad, cy + rad)],
-        fill=fill, outline=outline, width=int(width * S),
-    )
+# right track
+c.rect(288, 448, 360, 520, w=2, fill=DARK, color=INK)
+for wx in (300, 318, 336, 348):
+    c.circle(wx, 484, 10, fill="#111", stroke=INK, sw=1.5)
+for sx in range(292, 358, 6):
+    c.line(sx, 520, sx + 3, 514, w=1.0, color="#444")
 
+# ---------- base frame ----------
+c.line(150, 452, 350, 452, w=5, color=INK)
 
-def hatch(x0, x1, y0, y1, spacing, width=1, color="#c0c0c0"):
-    step = spacing * S
-    yy = y0 * S
-    while yy < y1 * S:
-        d.line([(x0 * S, yy), (x1 * S, yy - (x1 - x0) * S)], fill=color, width=int(width * S))
-        yy += step
+# ---------- hull / cab ----------
+c.polygon([
+    (176, 300), (324, 300), (334, 330), (334, 438),
+    (166, 438), (166, 330),
+], fill="#f4f4f4", outline=INK, w=2)
 
-
-# ── Soil band (soft ground below surface) ──
-hatch(25, 475, 520, 760, 12, 1, "#c9c9c9")
-hatch(120, 230, 520, 760, 8, 1, "#b5b5b5")
-hatch(270, 380, 520, 760, 8, 1, "#b5b5b5")
-
-# ── Ground surface ──
-line(25, 520, 475, 520, 3)
-
-# ── Hollow mandrel pipe ──
-line(238, 200, 238, 690, 3)
-line(262, 200, 262, 690, 3)
-line(238, 690, 262, 690, 3)
-
-# ── Wick drain (dashed) ──
-line(250, 205, 250, 688, 1.4, "#333", dash=(int(8 * S), int(5 * S)))
-
-# ── Driving head atop mandrel ──
-rect(231, 185, 38, 22, fill="#e8e8e8", width=2)
-
-# ── Crawler tracks ──
-rect(140, 448, 72, 72, fill="#2e2e2e", r=30, width=2)
-rect(288, 448, 72, 72, fill="#2e2e2e", r=30, width=2)
-circle(160, 484, 16, fill="#111", outline="#111")
-circle(192, 484, 16, fill="#111", outline="#111")
-circle(308, 484, 16, fill="#111", outline="#111")
-circle(340, 484, 16, fill="#111", outline="#111")
-
-# ── Base frame ──
-line(150, 452, 350, 452, 5)
-
-# ── Hull / cab ──
-d.polygon(
-    [
-        pt(176, 300), pt(324, 300), pt(334, 330), pt(334, 438),
-        pt(166, 438), pt(166, 330),
-    ],
-    fill="#f4f4f4", outline="#111", width=int(2 * S),
-)
 # cab window
-d.polygon(
-    [pt(192, 312), pt(250, 312), pt(258, 336), pt(250, 384), pt(192, 384), pt(184, 336)],
-    fill="#dfebf5", outline="#111", width=int(1.2 * S),
-)
-# mandrel passage hint inside hull (dashed)
-line(250, 336, 250, 438, 1.2, dash=(int(3 * S), int(4 * S)))
+c.polygon([
+    (192, 312), (250, 312), (258, 336), (250, 384),
+    (192, 384), (184, 336),
+], fill="#dfebf5", outline=INK, w=1.5)
 
-# ── Mast (tower) right of centre ──
-line(262, 40, 262, 300, 3)
-line(280, 40, 280, 300, 3)
-line(258, 70, 284, 70, 1.2)
-line(258, 140, 284, 140, 1.2)
-line(258, 210, 284, 210, 1.2)
+# mandrel passage (dashed inside hull)
+c.line(250, 336, 250, 438, w=1.2, color=GREY, dash="3,4")
 
-# ── Diagonal support boom ──
-line(271, 48, 100, 206, 6)
+# ---------- mast (tower) ----------
+c.line(262, 40, 262, 300, w=3, color=INK)
+c.line(280, 40, 280, 300, w=3, color=INK)
+# cross-bracing
+c.line(258, 70, 284, 70, w=1.2, color=GREY)
+c.line(258, 140, 284, 140, w=1.2, color=GREY)
+c.line(258, 210, 284, 210, w=1.2, color=GREY)
+# diagonal bracing
+c.line(262, 70, 280, 140, w=1.0, color="#aaa")
+c.line(280, 70, 262, 140, w=1.0, color="#aaa")
+c.line(262, 140, 280, 210, w=1.0, color="#aaa")
+c.line(280, 140, 262, 210, w=1.0, color="#aaa")
 
-# ── Pulleys ──
-circle(271, 30, 9, width=2.5)
-circle(100, 206, 11, width=2.5)
+# ---------- diagonal support boom ----------
+c.line(271, 48, 100, 206, w=6, color=INK)
+# boom detail (interior line)
+c.line(271, 52, 104, 204, w=1.5, color="#888")
 
-# ── Rigging ──
-line(271, 30, 100, 206, 1.4, "#444")
-line(262, 33, 250, 185, 1.4, "#444")
-line(262, 200, 250, 200, 1.2, "#444")
+# ---------- pulleys ----------
+c.circle(271, 30, 9, fill="#eee", stroke=INK, sw=2.5)
+c.circle(271, 30, 3, fill=INK)
+c.circle(100, 206, 11, fill="#eee", stroke=INK, sw=2.5)
+c.circle(100, 206, 3, fill=INK)
 
-# ── Surface/fill marks near tracks ──
+# ---------- rigging (cables) ----------
+c.line(271, 30, 100, 206, w=1.4, color="#444")
+c.line(262, 33, 250, 185, w=1.4, color="#444")
+c.line(262, 200, 250, 200, w=1.2, color="#444")
+
+# ---------- surface/fill marks near tracks ----------
 for sx in (148, 156, 164, 296, 304, 312):
-    line(sx, 520, sx + 8, 506, 1.2)
+    c.line(sx, 520, sx + 8, 506, w=1.2, color="#888")
 
-# ── Labels (small tags, English) ──
-from PIL import ImageFont
-try:
-    font = ImageFont.truetype("C:/Windows/Fonts/arial.ttf", size=int(11.5 * S))
-except Exception:
-    font = ImageFont.load_default()
-FSZ = 11.5 * S
+# ---------- labels (tag for readability) ----------
+c.tag(307, 26, "Pulley", size=13)
+c.tag(307, 66, "Mast", size=13)
+c.tag(112, 108, "Boom", size=13)
+c.tag(315, 188, "Driving head", size=13)
+c.tag(297, 328, "Mandrel", size=13)
+c.tag(303, 636, "Wick drain", size=13)
+c.tag(122, 456, "Crawler", size=13)
+c.tag(400, 510, "Ground line", size=13)
+c.tag(396, 640, "Soft ground", size=13)
 
-
-def tag(cx, cy, text):  # cx,cy = text anchor centre in viewBox units
-    w = font.getbbox(text)[2] - font.getbbox(text)[0]
-    tx, ty = pt(cx, cy)
-    rw, rh = w + 8, FSZ + 6
-    d.rounded_rectangle(
-        [tx - rw / 2, ty - rh / 2, tx + rw / 2, ty + rh / 2],
-        radius=2, fill="white", outline="#999999", width=1,
-    )
-    d.text((tx, ty), text, fill="#111111", font=font, anchor="mm")
-
-
-tag(307, 26, "Pulley")
-tag(307, 66, "Mast")
-tag(112, 108, "Boom")
-tag(315, 188, "Driving head")
-tag(297, 328, "Mandrel")
-tag(303, 636, "Wick drain")
-tag(122, 456, "Crawler")
-tag(400, 510, "Ground line")
-tag(396, 640, "Soft ground")
-
-img.save("C:/Users/Owner/trading-agent/hazarika-textbook-figures/export/fig-3.16-mandrel-machine.png")
-print("saved", img.size)
+# ---------- save ----------
+repo = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+c.save(f"{repo}/source/fig-3.16-mandrel-machine.svg",
+       f"{repo}/export/fig-3.16-mandrel-machine.png")
+print("saved fig 3.16 v2")

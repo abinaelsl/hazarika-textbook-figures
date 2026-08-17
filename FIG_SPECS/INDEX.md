@@ -32,7 +32,7 @@ work moves. Full annotation details: `../HANDOFF.md` §3/§4.
 | 1.11 | Increasing soil strength by consolidation | — | — | |
 | 1.12 | Change of soil strength by densification | standardize labeling | open | |
 | 1.13 | Change of soil strength by solidification | standardize labeling | open | |
-| 1.14 | Change of soil strength by reinforcement | reconstruct (b) | done | `3a730e2`; spec: see HANDOFF §6 |
+| 1.14 | Change of soil strength by reinforcement | reconstruct (b) | done | `3a730e2`; spec: see HANDOFF §6; regen 2026-08-17 (v3, subscript-glyph + layout fixes) |
 | 1.15 | Leaning Tower of Pisa, Italy | photo | scan | "send photo in" |
 | 1.16 | Kansai international airport | — | — | highlighted |
 | 1.17 | Tilted buildings during Niigata earthquake | — | — | highlighted |
@@ -48,7 +48,7 @@ work moves. Full annotation details: `../HANDOFF.md` §3/§4.
 | 2.5 | Field compaction equipments (I 2010) | insert original | scan | （オリジナルを入れる） |
 | 2.6 | Effect of field compaction w/ depth & passes (D'Appolonia 1969) | insert original | scan | （オリジナルを入れる） |
 | 2.7 | Work Flow of Compaction Method | — | — | |
-| 2.8 | Loose sand and Vibration | redraw | done | `912f378`; spec: `fig-2.8-loose-sand-vibration.md` |
+| 2.8 | Loose sand and Vibration | redraw | done | `912f378`; spec: `fig-2.8-loose-sand-vibration.md`; regen 2026-08-17 (v3, badge titles + density fix) |
 | 2.9 | Grain size distribution curve & Vibro-flotation range | source/citation or redraw | blocked | confirm source with professor first; also fix typos (Effctof, achive) |
 | 2.10 | Procedure of Vibro-flotation method | — | open | |
 | 2.11 | Renewal work for pier by Vibro-flotation | — | — | |
@@ -74,9 +74,9 @@ work moves. Full annotation details: `../HANDOFF.md` §3/§4.
 | 3.11 | Vacuum Consolidation Method | — | open | in-text labels: Vacuum pump / Air & Water / Sand mat with drain pipes / Airtight membrane / Vertical drainage materials |
 | 3.12 | Principle of vertical drain method | insert original | scan | （オリジナルを入れる） |
 | 3.13 | Wick drain | insert original | scan | （オリジナルを入れる） |
-| 3.14 | Procedures of Sand Drain Method with Casing Pipe | minor corrections | done | `bd7b9e9`; 7-panel procedure |
-| 3.15 | Prefabricated Typical Wick Drain (JGS 2006) | minor corrections | done | `124cc30`; cross-section table |
-| 3.16 | Mandrel-type Machine for Wick Driving | redraw | done | `0d9582c` |
+| 3.14 | Procedures of Sand Drain Method with Casing Pipe | minor corrections | done | `bd7b9e9`; 7-panel procedure; regen 2026-08-17 (v3) |
+| 3.15 | Prefabricated Typical Wick Drain (JGS 2006) | minor corrections | done | `124cc30`; cross-section table; regen 2026-08-17 (v3, fixed stray divider + label overlap) |
+| 3.16 | Mandrel-type Machine for Wick Driving | redraw | done | `0d9582c`; regen 2026-08-17 (v3, ground-hatch clip fix) |
 | 3.17 | Relationship of Th and U on Vertical Drain (Takagi 1955) | re-scan | scan | 図をもう一度スキャンする |
 | 3.18 | Pattern of Sand Pile and Effective Distance | add reference | open | 参考文献：高木論文？ |
 | 3.19 | Seawall Foundation and Soil Profiles of Kansai Int'l Airport | — | — | Furudoi & Kobayashi 2009, highlighted |

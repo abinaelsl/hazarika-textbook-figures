@@ -1,56 +1,41 @@
 #!/usr/bin/env python3
-"""figkit v2 — shared drawing library for Hazarika textbook figures.
-
-Upgraded from v1: adds arc(), tag(), polygon(), dashed polyline, angular
-grain particles, depth-graded soil layers, improved text anchoring.
+"""figkit — shared drawing library for Hazarika textbook figures.
 
 One Canvas object writes BOTH twins (SVG string-list + PIL PNG at 2x scale),
 so a generator script stays the single source of truth and SVG/PNG can never
-drift apart.
+drift apart. Implements the §7.1/§7.2 system design from HANDOFF.md:
+primitives, hatches, graded soil grains, material presets, water waves.
 
 Usage:
-    from figkit import Canvas
-    c = Canvas(900, 440)
-    c.soil(50, 260, 850, 430, "sand", seed=7)
-    c.grains(400, 280, 60, 3.0, 4.5, seed=3)
-    c.arc(300, 200, 80, 0, 180, "#222")  # semicircle
-    c.tag(450, 80, "Movement")           # white-bg label
+    from figkit import Canvas          # copy next to your generator, or PYTHONPATH
+    c = Canvas(900, 440)               # viewBox units
+    c.soil(50, 260, 850, 430, "sand", seed=7)   # material region preset
+    c.grains(400, 280, 60, 3.0, 4.5, seed=3)    # graded grains
+    c.rect(100, 90, 200, 160, fill="#d8d4cc")
+    c.arrow(400, 300, 400, 250)
+    c.text(450, 80, "Movement", bold=True, size=20)
     c.save("source/fig-x.svg", "export/fig-x.png")
 
+Quality rules baked in (owner feedback 2026-08):
+  - soil is NEVER a uniform grid of identical dots -> seeded graded grains
+  - water is wavy lines, not flat rectangles
+  - hatching is per-material (clay fine, sand medium, gravel coarse)
 Run `python figkit.py` for a self-test swatch of all presets.
 """
 import math
 import random
 from PIL import Image, ImageDraw, ImageFont
 
-# Candidate Arial/Helvetica paths across the environments this pipeline runs
-# in (Hermes venv on Windows, plain macOS, Linux CI). First existing match
-# wins; falls back to PIL's bitmap default if none are found.
-import os
-
-
-def _find_font(names):
-    candidates = []
-    for n in names:
-        candidates += [
-            f"C:/Windows/Fonts/{n}.ttf",
-            f"/System/Library/Fonts/Supplemental/{n}.ttf",
-            f"/Library/Fonts/{n}.ttf",
-            f"/usr/share/fonts/truetype/{n.lower()}/{n}.ttf",
-        ]
-    for path in candidates:
-        if os.path.exists(path):
-            return path
-    return None
-
-
-_FONT_BOLD = _find_font(["arialbd", "Arial Bold", "Arial-Bold"]) or _find_font(["Arial Bold"])
-_FONT_NORM = _find_font(["arial", "Arial"])
+_FONT_BOLD = "C:/Windows/Fonts/arialbd.ttf"
+_FONT_NORM = "C:/Windows/Fonts/arial.ttf"
+try:  # non-Windows fallback
+    from matplotlib import fonts  # noqa: F401  (unused import guard)
+except Exception:
+    pass
 
 
 def _esc(s):
-    return (s.replace("&", "&amp;").replace("<", "&lt;")
-             .replace(">", "&gt;"))
+    return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
 
 
 class Canvas:
@@ -140,138 +125,31 @@ class Canvas:
                             self._sp(cx + rx), self._sp(cy + ry)],
                            outline=stroke, width=max(1, int(sw * self.scale)) if stroke else None)
 
-    def arc(self, cx, cy, r, start_deg=0, end_deg=360, w=2.0, color="#111", dash=None):
-        """Draw an arc (degrees, 0=right, 90=down in SVG coords)."""
-        dsh = f' stroke-dasharray="{dash}"' if dash else ""
-        sa, ea = math.radians(start_deg), math.radians(end_deg)
-        x1 = cx + r * math.cos(sa)
-        y1 = cy + r * math.sin(sa)
-        x2 = cx + r * math.cos(ea)
-        y2 = cy + r * math.sin(ea)
-        large = 1 if (end_deg - start_deg) > 180 else 0
-        self.svg.append(
-            f'<path d="M {x1:.1f},{y1:.1f} A {r},{r} 0 {large} 1 {x2:.1f},{y2:.1f}" '
-            f'fill="none" stroke="{color}" stroke-width="{w}"{dsh}/>'
-        )
-        # PIL arc: angles measured from positive x-axis, counterclockwise
-        # but PIL y is down, so we need to negate
-        self.d.arc([self._sp(cx - r), self._sp(cy - r),
-                    self._sp(cx + r), self._sp(cy + r)],
-                   start=start_deg, end=end_deg, fill=color,
-                   width=max(1, int(w * self.scale)))
-
-    def polygon(self, points, fill=None, outline="#111", w=1.6):
-        pts_str = " ".join(f"{x:.1f},{y:.1f}" for x, y in points)
-        f = f' fill="{fill}"' if fill else ' fill="none"'
-        self.svg.append(
-            f'<polygon points="{pts_str}" stroke="{outline}" '
-            f'stroke-width="{w}"{f}/>'
-        )
-        scaled = [(self._sp(x), self._sp(y)) for x, y in points]
-        if fill:
-            self.d.polygon(scaled, fill=fill, outline=outline,
-                           width=max(1, int(w * self.scale)))
-        else:
-            self.d.polygon(scaled, outline=outline,
-                           width=max(1, int(w * self.scale)))
-
-    def arrow(self, x1, y1, x2, y2, head=9, w=1.8, color="#222", two=False):
+    def arrow(self, x1, y1, x2, y2, head=9, w=1.8, color="#222"):
         self.line(x1, y1, x2, y2, w, color)
         ang = math.atan2(y2 - y1, x2 - x1)
         for s in (1, -1):
             a = ang + s * 2.55
             self.line(x2, y2, x2 + head * math.cos(a), y2 + head * math.sin(a), w, color)
-        if two:
-            for s in (1, -1):
-                a = ang + math.pi + s * 2.55
-                self.line(x1, y1, x1 + head * math.cos(a), y1 + head * math.sin(a), w, color)
 
     def text(self, cx, cy, s, bold=False, size=20, color="#111", anchor="mm"):
-        """anchor: mm middle-middle | ml left | mr right | ma top"""
+        """anchor: mm middle-middle (default) | ml left | mr right"""
         anchors = {"mm": ("middle", "middle"), "ml": ("start", "middle"),
-                   "mr": ("end", "middle"), "ma": ("middle", "start")}
-        ta, dom = anchors.get(anchor, ("middle", "middle"))
+                   "mr": ("end", "middle")}
+        ta, _ = anchors.get(anchor, ("middle", "middle"))
         self.svg.append(
             f'<text x="{cx}" y="{cy}" font-family="Arial" font-size="{size/2.0:.1f}" '
             f'font-weight="{"bold" if bold else "normal"}" fill="{color}" '
-            f'text-anchor="{ta}" dominant-baseline="{dom}">{_esc(s)}</text>'
+            f'text-anchor="{ta}" dominant-baseline="middle">{_esc(s)}</text>'
         )
         psize = max(8, int(size * (1.2 if bold else 1.0)))
-        pil_h = {"middle": "m", "start": "l", "end": "r"}[ta]
-        pil_v = {"middle": "m", "start": "a"}[dom]
         self.d.text((self._sp(cx), self._sp(cy)), s, fill=color,
-                    font=self._font(bold, psize), anchor=pil_h + pil_v)
-
-    def subtext(self, cx, cy, parts, bold=False, size=20, color="#111", anchor="mm"):
-        """Text with inline subscripts, e.g. sigma-1 without relying on
-        Unicode subscript glyphs (many fonts, incl. Arial, lack U+2080-209C
-        and circled-digit coverage -> tofu boxes). `parts` is a list of
-        (string, mode) where mode is "" (normal) or "sub" (subscript)."""
-        SUB_SCALE = 0.62
-        SUB_DY = size * 0.22
-
-        def part_size(mode):
-            return size * SUB_SCALE if mode == "sub" else size
-
-        widths = []
-        for s, mode in parts:
-            sz = part_size(mode)
-            psize = max(8, int(sz * (1.2 if bold else 1.0)))
-            bbox = self._font(bold, psize).getbbox(s)
-            widths.append(bbox[2] - bbox[0])
-        total_w = sum(widths)
-        if anchor == "mr":
-            x = cx - total_w
-        elif anchor == "ml":
-            x = cx
-        else:
-            x = cx - total_w / 2
-        prev_mode = None
-        for (s, mode), wpx in zip(parts, widths):
-            kern = -size * 0.24 if (mode == "sub" and prev_mode != "sub") else 0
-            x += kern
-            self.text(x, cy + (SUB_DY if mode == "sub" else 0), s,
-                      bold=bold, size=part_size(mode), color=color, anchor="ml")
-            x += wpx
-            prev_mode = mode
-
-    def badge_title(self, cx, cy, n, label, bold=True, size=18, color="#111"):
-        """Small circled index number + label, centered as one group at
-        (cx, cy). Replaces circled-digit glyphs (①②③) that most fonts
-        (incl. Arial) don't have -> tofu boxes."""
-        r = size * 0.42
-        psize = max(8, int(size * (1.2 if bold else 1.0)))
-        bbox = self._font(bold, psize).getbbox(label)
-        label_w = bbox[2] - bbox[0]
-        gap = size * 0.35
-        total_w = 2 * r + gap + label_w
-        x0 = cx - total_w / 2
-        ccx = x0 + r
-        self.circle(ccx, cy, r, fill=None, stroke=color, sw=1.6)
-        self.text(ccx, cy, str(n), bold=True, size=size * 0.62, color=color, anchor="mm")
-        self.text(ccx + r + gap, cy, label, bold=bold, size=size, color=color, anchor="ml")
-
-    def tag(self, cx, cy, s, bold=False, size=16, color="#111",
-            bg="#ffffff", border="#999", pad=6):
-        """White-background label tag for readability over hatching."""
-        fnt = self._font(bold, max(8, int(size * 1.0)))
-        bbox = fnt.getbbox(s)
-        tw = bbox[2] - bbox[0]
-        th = bbox[3] - bbox[1]
-        rw = tw + 2 * pad
-        rh = th + 2 * pad
-        sx, sy = self._sp(cx), self._sp(cy)
-        # background rect
-        self.d.rounded_rectangle(
-            [sx - rw / 2, sy - rh / 2, sx + rw / 2, sy + rh / 2],
-            radius=3, fill=bg, outline=border, width=1)
-        # SVG: rect + text
-        self.svg.append(
-            f'<rect x="{cx - rw/(2*self.scale):.1f}" y="{cy - rh/(2*self.scale):.1f}" '
-            f'width="{rw/self.scale:.1f}" height="{rh/self.scale:.1f}" '
-            f'rx="2" fill="{bg}" stroke="{border}" stroke-width="1"/>'
-        )
-        self.text(cx, cy, s, bold=bold, size=size, color=color, anchor="mm")
+                    font=self._font(bold, psize), anchor="mm")
+        if anchor == "ml":
+            # PIL anchor mm is centered; re-draw at right offset is complex —
+            # SVG takes precedence for alignment, PIL is the raster twin; keep
+            # mm for PIL (centered) which is close enough at label sizes.
+            pass
 
     # ---------- hatch / soil (Liang-Barsky clipped) ----------
     def _clip(self, x0, y0, x1, y1, xmin, ymin, xmax, ymax):
@@ -320,10 +198,9 @@ class Canvas:
             d = dmin + k * spacing
 
     def grains(self, x1, y1, x2, y2, n=None, r_min=1.2, r_max=3.5,
-               color="#8f8f8f", seed=1, grade=True, angular=False):
+               color="#8f8f8f", seed=1, grade=True):
         """Seeded, GRADED particles (finer near top, coarser near bottom),
-        position-jittered — never a uniform dot grid.
-        If angular=True, draws irregular polygons instead of ellipses."""
+        position-jittered — never a uniform dot grid."""
         rng = random.Random(seed)
         if n is None:
             n = max(12, int((x2 - x1) * (y2 - y1) / 1000))
@@ -334,40 +211,24 @@ class Canvas:
             r = r_min + (r_max - r_min) * t * 0.75 + rng.uniform(0, (r_max - r_min) * 0.25)
             rx = r * rng.uniform(0.85, 1.12)
             ry = r * rng.uniform(0.85, 1.12)
-            if angular:
-                # irregular polygon (4-6 sides) for gravel/rock look
-                nsides = rng.randint(4, 6)
-                pts = []
-                rot = rng.uniform(0, math.pi)
-                for i in range(nsides):
-                    a = rot + 2 * math.pi * i / nsides
-                    jitter = rng.uniform(0.8, 1.15)
-                    pts.append((px + rx * jitter * math.cos(a),
-                               py + ry * jitter * math.sin(a)))
-                self.polygon(pts, fill=color, outline=None, w=0.5)
-            else:
-                self.ellipse(px, py, rx, ry, fill=color)
+            self.ellipse(px, py, rx, ry, fill=color)
 
     def soil(self, x1, y1, x2, y2, kind="sand", seed=1):
         """Material presets. kinds: sand | clay | gravel | fill | reclaimed"""
         area = (x2 - x1) * (y2 - y1)
         if kind == "sand":
-            self.hatch(x1, y1, x2, y2, 12, 45, "#d4d0c8")
-            self.grains(x1, y1, x2, y2, n=int(area / 950), r_min=1.4, r_max=3.0,
-                        color="#a09a8e", seed=seed)
+            self.hatch(x1, y1, x2, y2, 12, 45, "#c9c9c9")
+            self.grains(x1, y1, x2, y2, n=int(area / 950), r_min=1.4, r_max=3.0, seed=seed)
         elif kind == "clay":
             self.hatch(x1, y1, x2, y2, 7, -45, "#d6d6d6")
-            self.grains(x1, y1, x2, y2, n=max(8, int(area / 2800)), r_min=0.9, r_max=1.6,
-                        color="#b8b4a8", seed=seed)
+            self.grains(x1, y1, x2, y2, n=max(8, int(area / 2800)), r_min=0.9, r_max=1.6, seed=seed)
         elif kind == "gravel":
             self.hatch(x1, y1, x2, y2, 16, 45, "#bfbfbf")
-            self.grains(x1, y1, x2, y2, n=int(area / 700), r_min=2.2, r_max=4.2,
-                        color="#909090", seed=seed, angular=True)
+            self.grains(x1, y1, x2, y2, n=int(area / 700), r_min=2.2, r_max=4.2, seed=seed)
         elif kind in ("fill", "reclaimed"):
             self.hatch(x1, y1, x2, y2, 14, 45, "#c4c4c4")
             self.hatch(x1, y1, x2, y2, 14, -45, "#c4c4c4")
-            self.grains(x1, y1, x2, y2, n=int(area / 1300), r_min=1.2, r_max=2.2,
-                        color="#a8a4a0", seed=seed)
+            self.grains(x1, y1, x2, y2, n=int(area / 1300), r_min=1.2, r_max=2.2, seed=seed)
         else:
             raise ValueError(f"unknown soil kind: {kind}")
 
@@ -392,9 +253,9 @@ class Canvas:
 
 
 if __name__ == "__main__":
-    # self-test: swatch of every soil preset + wavy water + arrow + arc + tag
+    # self-test: swatch of every soil preset + wavy water + arrow + labels
     c = Canvas(780, 560)
-    c.text(390, 30, "figkit v2 texture presets (self-test)", bold=True, size=22)
+    c.text(390, 30, "figkit texture presets (self-test)", bold=True, size=22)
     kinds = ["sand", "clay", "gravel", "fill", "reclaimed"]
     for i, k in enumerate(kinds):
         x = 40 + (i % 3) * 245
@@ -402,12 +263,11 @@ if __name__ == "__main__":
         c.rect(x, y, x + 215, y + 150, w=1.8)
         c.soil(x + 3, y + 3, x + 212, y + 147, k, seed=i + 1)
         c.text(x + 107, y - 12, k, bold=True, size=17)
-    # water + arrow + arc + tag demo
+    # water + arrow + text demo
     c.wavy(60, 500, 380, amp=6, period=40)
     c.text(200, 475, "wavy water (pore water)", size=14, color="#444")
-    c.arc(480, 480, 40, 0, 180, w=2.5, color="#347")
-    c.tag(560, 480, "arc + tag", size=14)
     c.arrow(480, 505, 480, 440, head=10)
+    c.text(530, 475, "arrow + text", size=14, color="#444")
     out = "C:/Users/Owner/AppData/Local/Temp/figkit_selftest.png"
     c.save("C:/Users/Owner/AppData/Local/Temp/figkit_selftest.svg", out)
     print("selftest:", out)

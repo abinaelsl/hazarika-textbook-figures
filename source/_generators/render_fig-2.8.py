@@ -1,152 +1,88 @@
 #!/usr/bin/env python3
-"""Generate Fig 2.8 'Loose sand and Vibration' redraw (SVG + PNG from one geometry).
-3 panels: loose saturated -> liquefied during vibration -> re-settled densified."""
-import math, random
-from PIL import Image, ImageDraw, ImageFont
+"""Generate Fig 2.8 v2 'Loose sand and Vibration' (SVG+PNG).
 
-SVG = [r"""<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="680" viewBox="0 0 900 340">"""]
-PNG = Image.new("RGB", (1800, 680), "white")
-D = ImageDraw.Draw(PNG)
-try:
-    F = ImageFont.truetype("C:/Windows/Fonts/arialbd.ttf", 22)
-    FN = ImageFont.truetype("C:/Windows/Fonts/arial.ttf", 19)
-except Exception:
-    F = FN = ImageFont.load_default()
-S = 2.0  # px per unit
-TEXT = []  # (cx, cy, text, bold, anchor)
+v2 improvements over v1:
+- Uses figkit Canvas: soil(), grains(), wavy(), tag()
+- Graded particles (varied radii, depth-graded) instead of uniform circles
+- Proper wavy water lines (cosine) instead of short dashes
+- Displacement vectors during vibration (small arrows showing grain movement)
+- Dense vs loose packing visibly differs between panels
+- Better panel borders, consistent labels with tag()
+"""
+import sys, os, math, random
+sys.path.insert(0, os.path.dirname(__file__))
+from figkit import Canvas
 
-# ---------------- helpers ----------------
-def circle(x, y, r, fill="#333"):
-    SVG.append(f'<circle cx="{x}" cy="{y}" r="{r}" fill="{fill}"/>')
-    D.ellipse([(x*rx, y*ry), (x*rx + 2*r*rx, y*ry + 2*r*ry)], fill=fill)
-rx, ry = S, S
+c = Canvas(900, 340)
 
-def line(x1, y1, x2, y2, w=1.5, col="#111", dash=None):
-    dsh = f' stroke-dasharray="{dash}"' if dash else ""
-    SVG.append(f'<line x1="{x1}" y1="{y1}" x2="{x2}" y2="{y2}" stroke="{col}" stroke-width="{w}"{dsh}/>')
-    if dash:
-        sx, sy = x1 * rx, y1 * ry
-        ex, ey = x2 * rx, y2 * ry
-        dx, dy = ex - sx, ey - sy
-        L = (dx * dx + dy * dy) ** 0.5
-        nx, ny = dx / L, dy / L
-        on, off = map(float, dash.split(","))
-        pos = 0.0
-        while pos < L:
-            seg = min(on, L - pos)
-            D.line([(sx + nx * pos, sy + ny * pos), (sx + nx * (pos + seg), sy + ny * (pos + seg))], fill=col, width=int(w * rx))
-            pos += seg + off
-    else:
-        D.line([(x1 * rx, y1 * ry), (x2 * rx, y2 * ry)], fill=col, width=int(w * rx))
-
-def rect(x1, y1, x2, y2, w=1.5, fill="none", col="#111", dash=None):
-    dsh = f' stroke-dasharray="{dash}"' if dash else ""
-    f = f' fill="{fill}"' if fill != "none" else ""
-    SVG.append(f'<rect x="{x1}" y="{y1}" width="{x2-x1}" height="{y2-y1}" stroke="{col}" stroke-width="{w}"{dsh}{f}/>')
-    if fill != "none":
-        D.rectangle([x1*rx, y1*ry, x2*rx, y2*ry], fill=fill)
-    D.rectangle([x1*rx, y1*ry, x2*rx, y2*ry], outline=col, width=int(w*rx))
-
-def arrow(x1, y1, x2, y2, w=1.5, col="#111", dash=None, head=8):
-    line(x1, y1, x2, y2, w, col, dash)
-    ang = math.atan2(y2-y1, x2-x1)
-    for s in (1, -1):
-        a = ang + s * 2.6
-        hx = x2 + head*math.cos(a)
-        hy = y2 + head*math.sin(a)
-        line(x2, y2, hx, hy, 1.5, col)
-
-def cur(d1, stroke, col, dash=None):
-    dsh = f' stroke-dasharray="{dash}"' if dash else ""
-    pts = " ".join(f"{x},{y}" for x, y in d1)
-    SVG.append(f'<path d="M {pts}" fill="none" stroke="{col}" stroke-width="{stroke}"{dsh}/>')
-    if dash:
-        on, off = map(float, dash.split(","))
-        for i in range(len(d1) - 1):
-            sx, sy = d1[i][0] * rx, d1[i][1] * ry
-            ex, ey = d1[i + 1][0] * rx, d1[i + 1][1] * ry
-            dx, dy = ex - sx, ey - sy
-            L = (dx * dx + dy * dy) ** 0.5
-            if L == 0:
-                continue
-            nx, ny = dx / L, dy / L
-            pos = 0.0
-            while pos < L:
-                seg = min(on, L - pos)
-                D.line([(sx + nx * pos, sy + ny * pos), (sx + nx * (pos + seg), sy + ny * (pos + seg))], fill=col, width=int(stroke * rx))
-                pos += seg + off
-    else:
-        D.line([(x * rx, y * ry) for x, y in d1], fill=col, width=int(stroke * rx))
-
-def esc(s):
-    return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
-
-def text(cx, cy, s, bold=True, size_px=22, fill="#111"):
-    SVG.append(f'<text x="{cx}" y="{cy}" font-family="Arial" font-size="{size_px/2}" font-weight="{"bold" if bold else "normal"}" fill="{fill}" text-anchor="middle" dominant-baseline="middle">{esc(s)}</text>')
-    fnt = F if bold else FN
-    D.text((cx*rx, cy*ry), s, fill=fill, font=fnt, anchor="mm")
-
-# ---------------- geometry ----------------
+# ---------- panels ----------
 PANELS = [(22, 286), (318, 582), (614, 878)]
-Y1, Y2 = 40, 300  # soil box top/bottom
-loose = [(60,180),(92,150),(126,190),(150,150),(184,180),(210,150),(244,180),(78,232),(118,225),(156,235),(200,228),(232,235),(120,280),(180,272),(238,278)]  # sparse, tall
-liq = [(60,190),(100,205),(140,180),(180,210),(215,190),(250,205),(80,150),(118,150),(155,158),(198,150),(238,158),(60,262),(96,265),(140,258),(180,262),(222,260),(250,262)]  # scattered in water
-def dense_rows(x0, x1, ytop, r=11, cols=5):
-    pts = []
-    y = ytop
-    while y + 2*r <= Y2 - 8:
-        n = cols if len(pts) == 0 else (cols if True else cols)
-        row = [(x0 + i*(x1-x0)/(n-1), y) for i in range(n)]
-        pts += row
-        y += 2*r - 6
-    return pts
-dense = dense_rows(PANELS[2][0]+30, PANELS[2][1]-30, 200)  # shorter layer
-
-# ---------------- draw ----------------
-# title watermark none
-
-# Panel boxes
+Y1, Y2 = 40, 300
 for (px0, px1) in PANELS:
-    rect(px0, Y1, px1, Y2, 2)
+    c.rect(px0, Y1, px1, Y2, w=2)
 
-# --- Panel 1: loose & saturated ---
-for (x, y) in loose:
-    circle(x, y, 10, "#4a4a4a")
-text(154, 24, "① Loose & saturated sand  (before vibration)", True, 21)
-text(70, 130, "Pore water", False, 17)
-arrow(96, 132, 112, 172, 1.2, "#222")
-text(226, 250, "Sand particle", False, 17)
-arrow(216, 240, 200, 196, 1.2, "#222")
+# ---------- panel titles ----------
+c.badge_title(154, 13, 1, "Loose & saturated sand", bold=True, size=16)
+c.text(154, 31, "(before vibration)", size=13, color="#555")
+c.badge_title(450, 13, 2, "During vibration —", bold=True, size=16)
+c.text(450, 31, "grains lose contact", size=13, color="#555")
+c.badge_title(746, 13, 3, "After vibration —", bold=True, size=16)
+c.text(746, 31, "re-settled & densified", size=13, color="#555")
 
-# --- Panel 2: during vibration (liquefied/muddy) ---
-liq_rel = [(60,190),(100,205),(140,180),(180,210),(215,190),(250,205),
-           (80,150),(118,150),(155,158),(198,150),(238,158),
-           (60,262),(96,265),(140,258),(180,262),(222,260),(250,262)]
-for (x, y) in [(x2 + PANELS[1][0], y2) for (x2, y2) in liq_rel]:
-    circle(x, y, 9, "#6a6a6a")
-# wavy water lines (inside panel 2)
-for wx in (336 + 62 * i for i in range(4)):
-    for dy in (170, 182, 194):
-        line(wx, dy + 8, wx + 22, dy + 6, 1.4, "#5b9bd5")
-text(450, 24, "② During vibration — grains lose contact", True, 21)
-text(450, 326, "silt/water mixture behaves like a slurry", False, 15, "#555")
+# ---------- Panel 1: loose & saturated ----------
+# loose packing: fewer, larger, well-spaced grains (seeded, graded)
+p1 = PANELS[0]
+c.grains(p1[0]+8, Y1+10, p1[1]-8, Y2-10, n=35, r_min=4.0, r_max=7.0,
+         color="#4a4a4a", seed=11, grade=True)
+# pore water label + arrow
+c.tag(70, 60, "Pore water", size=14)
+c.arrow(96, 72, 112, 110, head=6, w=1.2, color="#222")
+# sand particle label + arrow
+c.tag(226, 250, "Sand particle", size=14)
+c.arrow(216, 238, 200, 200, head=6, w=1.2, color="#222")
+# subtle water indication (wavy line in pore space)
+c.wavy(p1[0]+15, 120, p1[1]-15, amp=3, period=40, w=1.0, color="#b8d4f0")
 
-# --- Panel 3: re-settled densified ---
-for (x, y) in dense:
-    circle(x, y, 11, "#333333")
-# original surface dashed line + settlement arrows
-line(PANELS[2][0]+10, 150, PANELS[2][1]-10, 150, 1.5, "#888", "7,5")
-for sx in (PANELS[2][0]+70, 746, PANELS[2][1]-70):
-    arrow(sx, 168, sx, 192, 1.6, "#444")
-# sand boils (upward dashed with end dots)
-for bx in (PANELS[2][0]+40, PANELS[2][1]-55):
-    cur([(bx, 196), (bx+8, 165), (bx+4, 140)], 1.5, "#2e75b6", "6,4")
-    circle(bx+4, 136, 3, "#2e75b6")
-text(746, 24, "③ After vibration — re-settled & densified", True, 21)
-text(746, 326, "settlement  ·  sand boils (pore water expelled)", False, 15, "#555")
+# ---------- Panel 2: during vibration (liquefied) ----------
+p2 = PANELS[1]
+# grains scattered in water (suspended, more dispersed)
+c.grains(p2[0]+8, Y1+10, p2[1]-8, Y2-10, n=40, r_min=3.0, r_max=5.5,
+         color="#6a6a6a", seed=22, grade=False)
+# wavy water lines (pore water under vibration)
+for dy in (100, 140, 180, 220, 260):
+    c.wavy(p2[0]+10, dy, p2[1]-10, amp=4, period=30, w=1.2, color="#5b9bd5")
+# displacement vectors (small arrows showing grain movement)
+rng = random.Random(33)
+for _ in range(8):
+    gx = p2[0] + 20 + rng.random() * (p2[1] - p2[0] - 40)
+    gy = Y1 + 30 + rng.random() * (Y2 - Y1 - 60)
+    dx = rng.uniform(-12, 12)
+    dy = rng.uniform(-12, 12)
+    c.arrow(gx, gy, gx+dx, gy+dy, head=4, w=1.0, color="#3a6ea5")
+c.text(450, 326, "silt/water mixture behaves like a slurry", size=13, color="#555")
 
-# leading click?
-SVG.append("</svg>")
-open(src := "C:/Users/Owner/trading-agent/hazarika-textbook-figures/source/fig-2.8-loose-sand-vibration.svg", "w").write("".join(SVG))
-PNG.save(exp := "C:/Users/Owner/trading-agent/hazarika-textbook-figures/export/fig-2.8-loose-sand-vibration.png")
-print("saved:", src, PNG.size)
+# ---------- Panel 3: re-settled densified ----------
+p3 = PANELS[2]
+# dense packing: many small, tightly packed grains
+c.grains(p3[0]+8, Y1+10, p3[1]-8, Y2-10, n=220, r_min=2.6, r_max=3.8,
+         color="#333333", seed=44, grade=True)
+# original surface dashed line
+c.line(p3[0]+10, 150, p3[1]-10, 150, w=1.5, color="#888", dash="7,5")
+c.tag(p3[0]+60, 142, "original surface", size=12, color="#666")
+# settlement arrows (downward)
+for sx in (p3[0]+70, 746, p3[1]-70):
+    c.arrow(sx, 168, sx, 192, head=7, w=1.6, color="#444")
+c.tag(p3[0]+95, 180, "settlement", size=12, color="#444")
+# sand boils (upward dashed curves with end dots)
+for bx in (p3[0]+40, p3[1]-55):
+    pts = [(bx, 196), (bx+8, 165), (bx+4, 140)]
+    c.polyline(pts, w=1.5, color="#2e75b6", dash="6,4")
+    c.circle(bx+4, 136, 3, fill="#2e75b6")
+c.tag(p3[1]-80, 120, "sand boil", size=12, color="#2e75b6")
+c.text(746, 326, "settlement  ·  sand boils (pore water expelled)", size=13, color="#555")
+
+# ---------- save ----------
+repo = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+c.save(f"{repo}/source/fig-2.8-loose-sand-vibration.svg",
+       f"{repo}/export/fig-2.8-loose-sand-vibration.png")
+print("saved fig 2.8 v2")

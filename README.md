@@ -11,7 +11,7 @@ English labels.
 2. `HANDOFF.md` — purpose, professor's annotation tables, pipeline, quality bar, pitfalls
 3. `FIG_SPECS/INDEX.md` — live tracker (what's done/open/blocked)
 4. For any figure: its generator under `source/_generators/` + `figkit.py`
-   (or `v2/generators/` + `figkit_v2.py`) — the script IS the figure.
+   — the script IS the figure.
 
 **Never read the docx as text**; extract media with `scripts/docx_extract.py` /
 annotations with `scripts/docx_annot.py` (stdlib, no lxml).
@@ -20,9 +20,9 @@ annotations with `scripts/docx_annot.py` (stdlib, no lxml).
 
 ```
 README.md  HANDOFF.md  FIG_SPECS/ (tracker+specs)
-source/            v1 SVG vectors          export/            v1 PNG (2x)
-source/_generators/  v1 figkit.py + render_fig-*.py
-v2/source/  v2/export/  v2/generators/     v2 redraws (better soil/texture, see v2 README)
+source/               SVG vectors (v3, current)     export/    PNG (2x, v3, current)
+source/_generators/   figkit.py + render_fig-*.py (v3, current)
+v1/  v2/              frozen reference archives of earlier redraw generations — do not edit
 scripts/     render_figure.py · qa_figure.py · docx helpers
 GI BookA Manuscript 2022.2.2/   ← CANONICAL source docx (current editions = '26.7.30 / 2023 Shinsaibashi)
 GI Book 2024 May/               ← Ch4-7 docx (untouched)
@@ -30,6 +30,16 @@ Fig_Workspace/                  ← legacy sketches + old READMEs (ignore, super
 ```
 
 ## Render / QA one figure
+
+Generator output paths and font lookup are repo-relative / cross-platform
+(figkit.py tries Windows, macOS, then Linux font paths in turn) — run from
+anywhere, on any OS, no path edits needed:
+
+```bash
+python3 source/_generators/render_fig-1.14.py      # emits SVG + PNG twins
+python3 source/_generators/figkit.py               # self-test swatch
+python3 scripts/qa_figure.py 1.14                   # QA gate
+```
 
 ```bash
 # Windows; Pillow in the Hermes venv is BROKEN — use system python + temp pylib:

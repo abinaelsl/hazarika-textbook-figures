@@ -15,23 +15,48 @@ extracts, decodes annotations, generates, commits directly to `main`.
 
 ## 2. Layout (production files)
 ```
-source/fig-<n>-<slug>.svg + export/fig-<n>-<slug>.png   ← v1 twins (generated)
-source/_generators/figkit.py + render_fig-<n>.py        ← v1 library + generators
-v2/source/ v2/export/ v2/generators/                    ← v2 redraws (figkit_v2.py)
+source/fig-<n>-<slug>.svg + export/fig-<n>-<slug>.png   ← CURRENT (v3) twins, generated
+source/_generators/figkit.py + render_fig-<n>.py        ← CURRENT (v3) library + generators
+v1/source/ v1/export/ v1/source/_generators/            ← v1 archive, reference only, do NOT edit
+v2/source/ v2/export/ v2/generators/ (figkit_v2.py)      ← v2 archive, reference only, do NOT edit
 scripts/{render_figure,qa_figure,docx_extract,docx_annot}.py
 FIG_SPECS/INDEX.md (live tracker) · _TEMPLATE.md · fig-<n>-<slug>.md
 GI BookA Manuscript 2022.2.2/   ← CANONICAL source docx ('26.7.30 = current editions)
 GI Book 2024 May/               ← Ch4-7 docx, untouched
 Fig_Workspace/                  ← legacy sketches + stale to-do READMEs (IGNORE)
 ```
+Root `source/`/`export/` is always the current canonical generation — work
+against it, never against `v1/` or `v2/`. Those two are frozen snapshots kept
+only so the redraw progression (v1 → v2 → v3) stays visible; if you improve a
+figure again, bump root in place (or archive today's root as `v3/` first if
+you want it kept too — there's no fixed cap on how many generations to keep,
+just don't silently overwrite a snapshot once it's archived).
 
-## 3. Status (2026-08-11)
-- **Done v1** (commit → source/): Ch1 1.14 `3a730e2`; Ch2 2.8 `912f378`;
-  Ch3 3.16 `0d9582c`, 3.15 `124cc30`, 3.14 `bd7b9e9`.
-- **Done v2** (commit `b16f4a6`, dirs under `v2/`, kept alongside v1): all 5
-  figures regenerated with figkit v2 — graded grains, soil() presets, wavy
-  water, tag() labels, full Mohr circles, detailed machine parts. **v2 is the
-  quality bar going forward.**
+## 3. Status (2026-08-17, v3)
+- **Done** (commit → source/): Ch1 1.14; Ch2 2.8; Ch3 3.16, 3.15, 3.14. This
+  is generation **v3** — built on v2's figkit (graded grains, soil() presets,
+  wavy water, tag() labels, full Mohr circles, detailed machine parts) with
+  the bugs below fixed. v1 (first redraws) and v2 (texture/geometry pass)
+  are kept as archives under `v1/` and `v2/` respectively — see §2.
+- **v3 fixes over v2** (see figkit.py `subtext()`/`badge_title()`): replaced
+  every Unicode subscript (σ₁ σ₃ etc.) and circled-digit (①②③) glyph — Arial
+  lacks those codepoints on both Windows and macOS, they rendered as tofu
+  boxes (□) even in the "done" PNGs (both v1 and v2 had this). Also: font
+  paths now resolve across Windows/macOS/Linux instead of hardcoding
+  `C:/Windows/Fonts`, and every generator's output path is repo-relative
+  (`dirname x3` from `__file__`) instead of a hardcoded `C:/Users/Owner/...`
+  path — run `python3 source/_generators/render_fig-<n>.py` from anywhere and
+  it finds the repo root itself. Fixed a stray-divider bug in fig 3.15 (a
+  composite-row separator line leaked into the Single-structure band) and a
+  label/diagram text collision in the same figure. Fig 1.14 had a caption
+  overlapping its own arrow label, and its τ-axis label overlapping the
+  "Failure envelopes" title — both repositioned. Fig 2.8's panel titles were
+  also wider than their panels (independent of the tofu bug) — wrapped to two
+  lines, and the "densified" panel was barely denser than the "loose" panel
+  (grain count bumped so the contrast actually reads). Also caught by the
+  repo's own `qa_figure.py`: `_esc()` (XML-escaping for SVG text) was a
+  complete no-op — `.replace("&", "&")` instead of `"&amp;"` — so any label
+  with a literal `&` produced invalid SVG; fixed.
 - **Blocked (needs professor):** Ch2 2.9 (grain-size curve — confirm source
   citation before drawing, do NOT fake data), 2.14 (W/Hw notation), 2.15
   (Weight vs Mass definition).
