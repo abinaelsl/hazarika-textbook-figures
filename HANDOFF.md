@@ -2,15 +2,21 @@
 
 > Single source of truth for the figure redraw project. Written 2026-08-10,
 > compressed 2026-08-11 for token efficiency. Repo: `abinaelsl/hazarika-textbook-figures`
-> (main, local `~/trading-agent/hazarika-textbook-figures`). Live status: `FIG_SPECS/INDEX.md`.
+> (main, local `~/developer/hazarika-textbook-figures`). Live status:
+> `FIG_SPECS/INDEX.md`; task ground truth: `FIG_SPECS/ANNOTATION_AUDIT.md`.
 
 ## 1. Purpose
 Redraw low-quality scans in Prof. Hazarika's ground-improvement textbook
-manuscript (Ch.1-3 active: Ch.1 intro, Ch.2 compaction/vibro/tamping
-non-cohesive, Ch.3 sand-drain/preloading/vertical-drain cohesive; Ch.4-7 docx
-exist, NOT worked). The professor marks figures **in Japanese inside the Word
-docs** (highlights/red text); figures are redrawn as clean vector SVG + hi-res
-PNG, English labels. Owner = "student worker" (Abinael); assistant (Hermes)
+manuscript. **All 7 chapters are in scope** (Ch.1 intro, Ch.2 compaction/
+vibro/tamping non-cohesive, Ch.3 sand-drain/preloading/vertical-drain cohesive,
+Ch.4 SCP/stone columns, Ch.5 grouting/DMM, Ch.6 earth reinforcement, Ch.7
+electro-osmosis/ground freezing) — the 2026-09-16 annotation sweep
+(`FIG_SPECS/ANNOTATION_AUDIT.md`) showed Ch.4-7 carry ten student-assigned
+redraws and six English-label jobs that had never been logged.
+
+The professor marks figures **in Japanese inside the Word docs** (highlights/
+red text); figures are redrawn as clean vector SVG + hi-res PNG, English
+labels. Owner = "student worker" (Abinael); assistant (Hermes)
 extracts, decodes annotations, generates, commits directly to `main`.
 
 ## 2. Layout (production files)
@@ -20,9 +26,11 @@ source/_generators/figkit.py + render_fig-<n>.py        ← CURRENT (v3) library
 v1/source/ v1/export/ v1/source/_generators/            ← v1 archive, reference only, do NOT edit
 v2/source/ v2/export/ v2/generators/ (figkit_v2.py)      ← v2 archive, reference only, do NOT edit
 scripts/{render_figure,qa_figure,docx_extract,docx_annot}.py
-FIG_SPECS/INDEX.md (live tracker) · _TEMPLATE.md · fig-<n>-<slug>.md
-GI BookA Manuscript 2022.2.2/   ← CANONICAL source docx ('26.7.30 = current editions)
-GI Book 2024 May/               ← Ch4-7 docx, untouched
+FIG_SPECS/INDEX.md (live tracker) · ANNOTATION_AUDIT.md (task ground truth)
+            · _TEMPLATE.md · fig-<n>-<slug>.md
+GI BookA Manuscript 2022.2.2/   ← CANONICAL source docx — Ch1-3 '26.7.30 /
+            July 2026 editions; Ch4-7 = 2023 Feb Shinsaibashi / (Fig) / (Figs)
+GI Book 2024 May/               ← later Ch4-6 drafts; cross-check before using
 Fig_Workspace/                  ← legacy sketches + stale to-do READMEs (IGNORE)
 ```
 Root `source/`/`export/` is always the current canonical generation — work
@@ -57,12 +65,23 @@ just don't silently overwrite a snapshot once it's archived).
   repo's own `qa_figure.py`: `_esc()` (XML-escaping for SVG text) was a
   complete no-op — `.replace("&", "&")` instead of `"&amp;"` — so any label
   with a literal `&` produced invalid SVG; fixed.
-- **Blocked (needs professor):** Ch2 2.9 (grain-size curve — confirm source
-  citation before drawing, do NOT fake data), 2.14 (W/Hw notation), 2.15
-  (Weight vs Mass definition).
-- **Open:** Ch1 1.1-1.9/1.12/1.13 redraws; Ch2 2.10/2.13; Ch3 3.10/3.11
-  (labels already in docx text); 3.18 (add Takagi 1955 reference).
-- **Scan tasks (insert ORIGINAL scan, never redraw):** Ch2 2.5/2.6; Ch3 3.8/3.12/3.13; Ch3 3.17 re-scan; Ch1 1.15 photo.
+- **Open — schematic redraws (12):** 4.9, 4.18, 5.1, 5.5, 5.6, 5.18, 5.20,
+  6.1, 6.2, 6.13, 7.6, 7.8. Ch.6/7 ones are "replace Japanese in-figure text
+  with English" and the professor supplied the JA→EN glossary inline in the docx.
+- **Owner-only — real data, NEVER generate (5):** 2.9, 4.16, 4.23, 5.16, 7.7.
+  See §6a.
+- **Text-only edits (3):** 3.18 add citation (高木論文？); 6.4, 6.5 add title.
+- **Blocked (needs professor):** 2.13 (W vs w notation), 2.15 (Weight vs Mass
+  definition), 5.13 (insert Fig.5.14?), 5.17 (要修正 scope unclear), 7.9
+  (別の図に入れ替えること — needs a replacement source figure).
+- **Scan tasks (insert ORIGINAL scan, never redraw):** 2.3, 2.5, 2.6, 3.8,
+  3.12, 3.13, 4.17, 5.9; 3.17 re-scan; 1.15 photo.
+- **Not ours:** 4.4 / 4.14 (Prof. Nakazawa supplies), 4.12 (ask Harada-san),
+  6.14 (Hazarika), 4.22 (**a trace is already commissioned — May 27 email —
+  do not duplicate**).
+- **No annotation, do NOT assume work:** Ch.1 1.1-1.9/1.12/1.13 and Ch.3 3.15
+  were listed as open tasks in the old INDEX but carry no mark in any docx
+  edition. Confirm with the professor before touching them.
 
 ## 4. Professor's annotations (decode convention)
 `図を〜する（学生アルバイト）` = "do ~ to this figure (student worker)".
@@ -79,6 +98,19 @@ Full per-figure table: `FIG_SPECS/INDEX.md` (Task + Status + Notes columns).
 | 図をもう一度スキャンする | re-scan |
 | 本文含めて〜の定義の確認 | confirm definition w/ main text |
 | Sourceを確認し、引用文献を入れる | confirm source + add citation |
+| 書き直す：学生へ / 学生に書き直し | redraw, assigned to the student |
+| トレースしてください | please trace (copy exactly — not a free redraw) |
+| 作り直す学生へお願い | remake, request to the student |
+| Hatchingを入れる | add hatching |
+| 直しました：もう少し改善が必要 | fixed already, needs further improvement |
+| スキャンをし直し | re-scan |
+| 別の図に入れ替えること | replace with a different figure entirely |
+| タイトルをつける | add a title |
+| 〜からOriginalを送って貰う／お尋ね | someone else supplies the original — not ours |
+
+**Reading the extractor output:** `cyan` highlight is applied to nearly every
+caption as styling and is **not** a task marker. Real instructions are the
+**red text** (`#ff0000`) and **yellow-highlighted** Japanese parentheticals.
 
 ## 5. Pipeline (proven — how all figures were made)
 1. **Extract:** `scripts/docx_extract.py <docx>` → media/ (stdlib zipfile;
@@ -109,13 +141,23 @@ Full per-figure table: `FIG_SPECS/INDEX.md` (Task + Status + Notes columns).
 - Draft-commit-iterate; never skip quality bar. Vague notes (若干修正) = rebuild
   cleanly + state interpretation in commit message.
 
+## 6a. Illustrative vs data (routing rule — added 2026-09-16)
+Two routes, never mixed:
+- **Schematic / illustrative** (principle diagrams, procedure sequences, system
+  layouts, cross-sections): judged on clarity. Free choice of production method.
+- **Real data** (anything plotting measured or published values): must be
+  traced or replotted from the source. A generative model yields a curve that
+  looks right and is not the published data — the same failure mode as the
+  standing "do NOT fake data" rule on 2.9. Current `owner` rows: 2.9, 4.16,
+  4.23, 5.16, 7.7. The owner draws these by hand.
+
 ## 7. Environment (Windows, MSYS bash)
 | Item | Value |
 |---|---|
 | Python | `C:/Users/Owner/AppData/Local/Programs/Python/Python312/python.exe` |
 | **Pillow BROKEN in Hermes venv** → use temp pylib | `py -m pip install --target C:/Users/Owner/AppData/Local/Temp/pylib Pillow`, then `VIRTUAL_ENV= PYTHONPATH=C:/Users/Owner/AppData/Local/Temp/pylib python ...` |
 | Fonts | `C:/Windows/Fonts/arialbd.ttf`, `arial.ttf` |
-| Helpers | `scripts/docx_extract.py`, `scripts/docx_annot.py` (regenerate if lost — small) |
+| Helpers | `scripts/docx_extract.py`, `scripts/docx_annot.py` — restored 2026-09-16 after going missing; `docx_annot.py` takes `--all` and tags each marked run with its highlight/colour |
 | QA | `scripts/qa_figure.py <fig>` (well-formed, determinism, labels) · `scripts/render_figure.py <fig>` (render+QA one-shot) |
 | Owner | Abinael (repo owner); Prof. Hazarika reviews; chat language casual (Bahasa Indo ok), English in figures |
 
